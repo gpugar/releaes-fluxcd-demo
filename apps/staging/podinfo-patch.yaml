@@ -1,0 +1,24 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: podinfo
+  namespace: podinfo
+spec:
+  chart:
+    spec:
+      version: ">=6.0.0"
+  test:
+    enable: true
+  values:
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+    ingress:
+      hosts:
+        - host: podinfo.staging.example.com
+          paths:
+            - path: /
+              pathType: Prefix 
