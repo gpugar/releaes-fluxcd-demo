@@ -1,0 +1,31 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: grafana
+      version: "10.2.x"
+      sourceRef:
+        kind: OCIRepository
+        name: grafana
+        namespace: flux-system
+  values:
+    persistence:
+      enabled: true
+      size: 1Gi
+    ingress:
+      enabled: true
+      className: nginx
+    adminPassword: "admin-password"
+    datasources:
+      datasources.yaml:
+        apiVersion: 1
+        datasources:
+          - name: Prometheus
+            type: prometheus
+            url: http://prometheus:9090
+            isDefault: true 

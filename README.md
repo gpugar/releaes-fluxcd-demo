@@ -4,6 +4,7 @@ This repository demonstrates GitOps using FluxCD with multiple clusters (staging
 - Kustomize deployment with [podinfo](https://github.com/stefanprodan/podinfo)
 - Helm deployment with [Redis](https://github.com/bitnami/charts/tree/main/bitnami/redis)
 - OCI deployment with [Grafana](https://grafana.com/docs/grafana/latest/setup-grafana/installation/kubernetes/)
+- Helm Chart deployment with [Prometheus](https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus)
 
 ## Repository Structure
 
@@ -12,6 +13,7 @@ This repository demonstrates GitOps using FluxCD with multiple clusters (staging
 │   ├── base
 │   │   ├── grafana
 │   │   ├── podinfo
+│   │   ├── prometheus
 │   │   └── redis
 │   ├── production
 │   └── staging
@@ -33,6 +35,10 @@ This repository demonstrates GitOps using FluxCD with multiple clusters (staging
    # or
    curl -s https://fluxcd.io/install.sh | sudo bash
    ```
+4. Kubernetes kind installed if using multi cluster setup:
+   ```sh
+   brew install kind
+   ```
 
 ## Applications
 
@@ -51,18 +57,28 @@ This repository demonstrates GitOps using FluxCD with multiple clusters (staging
 - Deployed using OCI artifacts
 - Different datasource configurations per environment
 
-## Bootstrap Clusters
+### 4. Prometheus (Helm Chart)
+- Monitoring and alerting toolkit
+- Deployed using Helm Chart from prometheus-community
 
-### Staging
 
+## Single cluster setup:
+
+
+Environment variables:
 ```sh
 export GITHUB_TOKEN=<your-token>
 export GITHUB_USER=<your-username>
 export GITHUB_REPO=release-fluxcd-demo
+```
 
+### **Bootstrap Cluster:**
+
+### For STAGING:
+
+```sh
 # Bootstrap staging
 flux bootstrap github \
-    --context=staging \
     --owner=${GITHUB_USER} \
     --repository=${GITHUB_REPO} \
     --branch=main \
@@ -70,17 +86,57 @@ flux bootstrap github \
     --path=clusters/staging
 ```
 
-### Production
+### For PRODUCTION:
 
 ```sh
 # Bootstrap production
+flux bootstrap github \
+    --owner=${GITHUB_USER} \
+    --repository=${GITHUB_REPO} \
+    --branch=main \
+    --personal \
+    --path=clusters/production
+```
+
+## Multi cluster setup:
+
+For multi cluster setup we will add `context` to the bootstrap command:
+
+
+Create kind clusters:
+```sh
+kind create cluster --name staging
+kind create cluster --name production
+```
+
+Make sure to set the context for the clusters:
+```sh
+kubectl config rename-context kind-staging staging
+kubectl config rename-context kind-production production
+```
+
+## Bootstrap Staging Cluster:
+
+```sh
+flux bootstrap github \
+    --context=staging \
+    --owner=${GITHUB_USER} \
+    --repository=${GITHUB_REPO} \
+    --branch=main \
+    --personal \
+    --path=clusters/staging \  
+```
+
+## Bootstrap Production Cluster:
+
+```sh
 flux bootstrap github \
     --context=production \
     --owner=${GITHUB_USER} \
     --repository=${GITHUB_REPO} \
     --branch=main \
     --personal \
-    --path=clusters/production
+    --path=clusters/production \
 ```
 
 ## Directory Structure Details
@@ -89,6 +145,7 @@ flux bootstrap github \
 - `apps/base/podinfo`: Kustomize manifests for podinfo
 - `apps/base/redis`: Helm release configuration for Redis
 - `apps/base/grafana`: OCI image configuration for Grafana
+- `apps/base/prometheus`: Helm Chart configuration for Prometheus
 
 ### Environment-Specific Configurations
 - `apps/staging`: Staging-specific configurations

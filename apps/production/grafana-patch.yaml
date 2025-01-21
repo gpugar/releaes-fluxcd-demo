@@ -1,0 +1,46 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  chart:
+    spec:
+      version: "10.2.x"
+  values:
+    replicas: 2
+    resources:
+      limits:
+        memory: 512Mi
+        cpu: 500m
+      requests:
+        memory: 256Mi
+        cpu: 200m
+    persistence:
+      size: 10Gi
+    ingress:
+      hosts:
+        - grafana.prod.example.com
+      tls:
+        - secretName: grafana-tls
+          hosts:
+            - grafana.prod.example.com
+    env:
+      - name: GF_AUTH_GITHUB_ENABLED
+        value: "true"
+      - name: GF_AUTH_GITHUB_ALLOW_SIGN_UP
+        value: "true"
+      - name: GF_AUTH_GITHUB_CLIENT_ID
+        valueFrom:
+          secretKeyRef:
+            name: grafana-github-oauth
+            key: client-id
+      - name: GF_AUTH_GITHUB_CLIENT_SECRET
+        valueFrom:
+          secretKeyRef:
+            name: grafana-github-oauth
+            key: client-secret
+    alerting:
+      enabled: true
+    unified_alerting:
+      enabled: true 
