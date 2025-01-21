@@ -1,0 +1,39 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  chart:
+    spec:
+      version: "25.x"
+  values:
+    server:
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 1Gi
+        requests:
+          cpu: 500m
+          memory: 512Mi
+      persistentVolume:
+        size: 50Gi
+      retention: 30d
+      replicaCount: 2
+    alertmanager:
+      enabled: true
+      resources:
+        limits:
+          cpu: 400m
+          memory: 512Mi
+        requests:
+          cpu: 200m
+          memory: 256Mi
+      replicaCount: 2
+    ingress:
+      hosts:
+        - prometheus.prod.example.com
+      tls:
+        - secretName: prometheus-tls
+          hosts:
+            - prometheus.prod.example.com 
