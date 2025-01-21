@@ -14,6 +14,8 @@ metadata:
   namespace: cert-manager
 spec:
   interval: 30m
+  install:
+    createNamespace: true
   chart:
     spec:
       chart: cert-manager
@@ -22,7 +24,5 @@ spec:
         kind: HelmRepository
         name: cert-manager
         namespace: flux-system
-  install:
-    createNamespace: true
   values:
     installCRDs: true 
