@@ -4,7 +4,7 @@ metadata:
   name: infra-controllers
   namespace: flux-system
 spec:
-  interval: 10m
+  interval: 10m0s
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -18,7 +18,7 @@ metadata:
   name: infra-configs
   namespace: flux-system
 spec:
-  interval: 10m
+  interval: 10m0s
   dependsOn:
     - name: infra-controllers
   sourceRef:
