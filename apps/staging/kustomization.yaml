@@ -3,10 +3,8 @@ kind: Kustomization
 resources:
   - ../base/podinfo
   - ../base/redis
-  - ../base/grafana
   - ../base/prometheus
 patches:
   - path: podinfo-patch.yaml
   - path: redis-patch.yaml
-  - path: grafana-patch.yaml
   - path: prometheus-patch.yaml 
