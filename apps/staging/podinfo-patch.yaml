@@ -1,4 +1,4 @@
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: podinfo
@@ -9,6 +9,17 @@ spec:
       version: ">=6.0.0"
   test:
     enable: true
+  values:
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+    ingress:
+      hosts:
+        - host: podinfo.staging
+    replicaCount: 1
   values:
     resources:
       limits:

@@ -1,4 +1,4 @@
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: redis
@@ -20,4 +20,5 @@ spec:
       persistence:
         size: 1Gi
     metrics:
-      enabled: true 
+      enabled: true
+    # your staging-specific values here 
