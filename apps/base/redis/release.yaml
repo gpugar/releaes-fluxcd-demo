@@ -1,4 +1,4 @@
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: redis
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: redis
-      version: "17.x"
+      version: "18.x"
       sourceRef:
         kind: HelmRepository
         name: bitnami
