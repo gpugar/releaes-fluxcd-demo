@@ -1,4 +1,4 @@
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: podinfo
@@ -6,18 +6,11 @@ metadata:
 spec:
   chart:
     spec:
-      version: "6.x"
+      version: ">=1.0.0"
   values:
-    replicaCount: 3
-    resources:
-      limits:
-        memory: 512Mi
-      requests:
-        cpu: 200m
-        memory: 256Mi
     ingress:
       hosts:
-        - host: podinfo.prod.example.com
+        - host: podinfo.production
           paths:
             - path: /
-              pathType: Prefix 
+              pathType: ImplementationSpecific
