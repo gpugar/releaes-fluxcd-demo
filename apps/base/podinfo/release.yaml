@@ -18,8 +18,14 @@ spec:
     ingress:
       enabled: true
       className: nginx
-      hosts:
+      rules:
         - host: podinfo.local
-          paths:
-            - path: /
-              pathType: Prefix 
+          http:
+            paths:
+              - path: /
+                pathType: Prefix
+                backend:
+                  service:
+                    name: podinfo
+                    port:
+                      number: 9898 
