@@ -1,4 +1,4 @@
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: grafana
@@ -8,11 +8,12 @@ spec:
   chart:
     spec:
       chart: grafana
-      version: "10.2.x"
+      version: "6.x"
       sourceRef:
-        kind: OCIRepository
+        kind: HelmRepository
         name: grafana
         namespace: flux-system
+      interval: 1m
   values:
     persistence:
       enabled: true
@@ -28,4 +29,6 @@ spec:
           - name: Prometheus
             type: prometheus
             url: http://prometheus:9090
-            isDefault: true 
+            isDefault: true
+    service:
+      type: ClusterIP 
